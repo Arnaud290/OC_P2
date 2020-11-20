@@ -177,12 +177,14 @@ print("    - Pour une recupération des informations sur un article, faite le 1\
 
 while True:
     os.chdir(repertoire_parent)
-    choix = int(input("\n\n\nChoix : "))
-    if choix == 1 :
+    choix = (input("\n\n\nChoix : "))
+    if choix not in ('0','1','2'):
+        continue
+    if choix == '1' :
         info_article_CSV() 
-    if choix == 2 :
+    if choix == '2':
         info_categorie_CSV()  
-    if choix == 0 :
+    if choix == '0' :
         break 
         
     
