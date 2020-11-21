@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import os
+from threading import Thread
 
 repertoire_parent = os.getcwd()
 
@@ -16,10 +17,29 @@ list_entete = ['product_page_url',
                 'review_rating',
                 'image_url'] 
 
-def recup_url_article(art):
-    """
-    Module de récupération du lien URL de l'article demandé
-    """                                                                                                                                                                             
+def recup_url_article(art): 
+    class Th_recup_url(Thread):   
+        def __init__(self, art, i):
+            Thread.__init__(self)
+            self.art = art
+            self.i = i
+        def run(self):
+            url = 'http://books.toscrape.com/catalogue/page-' + str(self.i) + '.html'                                       
+            reponse = requests.get(url)                                                                                                                                                             
+            if reponse.ok:                                                                                              
+                soup = BeautifulSoup(reponse.text,'lxml')                                                                             
+                articles = soup.findAll("article")                                                                     
+                for article in articles:                                                                               
+                    a = article.find('a')                                                                                                                                                                
+                    link = ('http://books.toscrape.com/catalogue/'+ a['href'])                                                                                     
+                    reponse = requests.get(link)
+                    if reponse.ok:
+                        soup = BeautifulSoup(reponse.text,'lxml')
+                        title = soup.find('div', {'class':'col-sm-6 product_main'}).find('h1').text
+                        if title == self.art: 
+                            retour_url.append(link)                                                                                              
+            else:                                                                                                          
+                print("Veuillez entrer une adresse valide.")                                                                                                                                                            
     url = 'https://books.toscrape.com/index.html'                                                                   
     reponse = requests.get(url)                                                                                                                                                                      
     if reponse.ok:                                                                                                 
@@ -27,26 +47,16 @@ def recup_url_article(art):
         nb_pages = soup.find('li',{'class':'current'}).text.strip()                                                                                                          
         nb_pages = int((str(nb_pages)[10:]))                                                                            
     else:                                                                                                          
-        print("Veuillez entrer une adresse valide.")                                                                            
-    for i in range(1, nb_pages + 1):  
-        print(i)                                                                              
-        url = 'http://books.toscrape.com/catalogue/page-' + str(i) + '.html'                                       
-        reponse = requests.get(url)                                                                                                                                                             
-        if reponse.ok:                                                                                              
-            soup = BeautifulSoup(reponse.text,'lxml')                                                                             
-            articles = soup.findAll("article")                                                                     
-            for article in articles:                                                                               
-                a = article.find('a')                                                                                                                                                                
-                link = ('http://books.toscrape.com/catalogue/'+ a['href'])                                                                                     
-                reponse = requests.get(link)
-                if reponse.ok:
-                    soup = BeautifulSoup(reponse.text,'lxml')
-                    title = soup.find('div', {'class':'col-sm-6 product_main'}).find('h1').text
-                    if title == art:                                                                                    
-                        return link                                                                                     
-        else:                                                                                                          
-            print("Veuillez entrer une adresse valide.")  
-    print("Cette article n'est pas sur le site.")                                           
+        print("Veuillez entrer une adresse valide.")   
+    retour_url=[]
+    t=dict()                                                       
+    for i in range(0, nb_pages):
+        t[i] = Th_recup_url(art,i+1)
+        t[i].start()    
+    for i in t:
+        t[i].join()
+    return retour_url[0]
+                                            
 
 def valeurs_articles(url):
     """
@@ -203,7 +213,7 @@ print("    - Pour une recupération des informations sur un article, faites le 1
     - Pour une recupération des informations sur une catégorie, faites le 2\n\
     - Pour une recupération des informations sur toutes les catégorie faites le 3\n\
     - Pour quitter le programme, faites 0\n\n\nPour Chaques choix, les images des articles\
-    recherchés seront disponble dans le repertoire Images")
+recherchés seront disponble dans le repertoire Images")
 
 while True:
     os.chdir(repertoire_parent)
@@ -217,9 +227,4 @@ while True:
     if choix == '3':
         info_toutes_catgories_CSV()
     if choix == '0':
-        break 
-        
-    
-
-
-
+        break
