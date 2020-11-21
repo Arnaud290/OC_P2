@@ -21,28 +21,29 @@ def recup_url_article(art):
     Module de récupération du lien URL de l'article demandé
     """                                                                                                                                                                             
     url = 'https://books.toscrape.com/index.html'                                                                   
-    reponse = requests.get(url)                                                                                         # récuprération du test sur l'index du site                                                                               
+    reponse = requests.get(url)                                                                                                                                                                      
     if reponse.ok:                                                                                                 
         soup = BeautifulSoup(reponse.text,'lxml')                                                                   
-        nb_pages = soup.find('li',{'class':'current'}).text.strip()                                                     # récupération du nombre de pages                                                       
-        nb_pages = int((str(nb_pages)[10:]))                                                                            # création d'un entier du nombre de pages
+        nb_pages = soup.find('li',{'class':'current'}).text.strip()                                                                                                          
+        nb_pages = int((str(nb_pages)[10:]))                                                                            
     else:                                                                                                          
         print("Veuillez entrer une adresse valide.")                                                                            
-    for i in range(1, nb_pages + 1):                                                                                
+    for i in range(1, nb_pages + 1):  
+        print(i)                                                                              
         url = 'http://books.toscrape.com/catalogue/page-' + str(i) + '.html'                                       
-        reponse = requests.get(url)                                                                                     # récupération du texte page par page                                                                          
+        reponse = requests.get(url)                                                                                                                                                             
         if reponse.ok:                                                                                              
             soup = BeautifulSoup(reponse.text,'lxml')                                                                             
             articles = soup.findAll("article")                                                                     
             for article in articles:                                                                               
-                a = article.find('a')                                                                                   # récupération du nom de chaque articles                                                                             
+                a = article.find('a')                                                                                                                                                                
                 link = ('http://books.toscrape.com/catalogue/'+ a['href'])                                                                                     
                 reponse = requests.get(link)
                 if reponse.ok:
                     soup = BeautifulSoup(reponse.text,'lxml')
                     title = soup.find('div', {'class':'col-sm-6 product_main'}).find('h1').text
-                    if title == art:                                                                                    # si le nom de l'article correspond a l'article demandé
-                        return link                                                                                     # le module retourne le lien correspondant à l'article
+                    if title == art:                                                                                    
+                        return link                                                                                     
         else:                                                                                                          
             print("Veuillez entrer une adresse valide.")  
     print("Cette article n'est pas sur le site.")                                           
@@ -138,16 +139,15 @@ def info_article_CSV():
     url = recup_url_article(article)                                                                                        
     creation_repertoire('Articles')                                                                                                
     list_valeurs = valeurs_articles(url) 
-    file_csv = (str(article) + '.csv')
+    file_csv = str(list_valeurs[2]).replace('/','|') + '.csv' 
     with open(file_csv,'w',encoding='latin1') as file:                                                           
         csvfile = csv.writer(file, delimiter=',')                                                                                                                  
         csvfile.writerow(list_entete)                                                                                
         csvfile.writerow(list_valeurs)
     creation_repertoire('Images')
-    images(article, list_valeurs[9])   
-    print("Les données de l'article '{}' sont dans le fichier CSV dans le repertoire Articles".format(article))
+    images(str(list_valeurs[2]).replace('/','|'), list_valeurs[9])  
+    print("Les données de l'article {} sont dans le fichier CSV dans le repertoire Articles".format(article))
         
-
 def info_categorie_CSV():
     categorie = input("Veuillez entrer le nom de la catégorie : ") 
     url = recup_url_categorie(categorie)
@@ -156,7 +156,7 @@ def info_categorie_CSV():
     creation_repertoire(repertoire)
     for url in urls :
         list_valeurs = valeurs_articles(url)
-        file_csv = list_valeurs[2] + '.csv'
+        file_csv = str(list_valeurs[2]).replace('/','|') + '.csv'
         with open(file_csv,'w',encoding='latin1') as file:                                                           
             csvfile = csv.writer(file, delimiter=',')                                                                                                                  
             csvfile.writerow(list_entete)                                                                                
@@ -164,27 +164,59 @@ def info_categorie_CSV():
     creation_repertoire('Images')
     for url in urls : 
         list_valeurs = valeurs_articles(url)
-        images(list_valeurs[2], list_valeurs[9])
-
+        images(str(list_valeurs[2]).replace('/','|'), list_valeurs[9])
+    print("Les données des articles de la catégorie {} sont dans les fichiers CSV dans le repertoire {}.".format(categorie,repertoire))
+    
+def info_toutes_catgories_CSV():
+    creation_repertoire('Toutes_Categories')
+    listCategory=dict()
+    url = 'https://books.toscrape.com/'
+    reponse = requests.get(url)
+    if reponse.ok:
+        soup = BeautifulSoup(reponse.text,'lxml')
+        lis = soup.find('ul', {'class':'nav nav-list'}).find('li').find('ul').findAll('li')
+        for li in lis:
+            categorie = li.text.strip()
+            a = li.find('a')                                                                              
+            link = 'https://books.toscrape.com/'+a['href']  
+            listCategory[li.text.strip()] = link
+    for categorie in listCategory:
+        file_csv = (str(categorie) + '.csv')
+        with open(file_csv,'w',encoding='latin1') as file:                                                           
+            csvfile = csv.writer(file, delimiter=',')                                                                                                                  
+            csvfile.writerow(list_entete)
+            listUrl = recup_toutes_urls_articles_categorie(listCategory[categorie])       
+            for url in listUrl:
+                list_valeurs = valeurs_articles(url)
+                csvfile.writerow(list_valeurs)
+        repertoire_Images =  'Images/' + categorie          
+        creation_repertoire(repertoire_Images)
+        for url in listUrl:
+            list_valeurs = valeurs_articles(url)
+            images(str(list_valeurs[2]).replace('/','|'), (list_valeurs[9]))
+        repertoire = repertoire_parent + '/Toutes_Categories'
+        os.chdir(repertoire)
+    print("Les données des articles de toutes les catégories sont le repertoire Toutes_Categories.")
 
 print("Bonjour, bienvenue sur le programme de scraping du site https://books.toscrape.com,\n")
-print("    - Pour une recupération des informations sur un article, faite le 1\n\
-    - Pour une recupération des informations sur une catégorie, faite le 2\n\
-    - Pour quitter le programme, faites 0\n\n\n")
-
-
-
+print("    - Pour une recupération des informations sur un article, faites le 1\n\
+    - Pour une recupération des informations sur une catégorie, faites le 2\n\
+    - Pour une recupération des informations sur toutes les catégorie faites le 3\n\
+    - Pour quitter le programme, faites 0\n\n\nPour Chaques choix, les images des articles\
+    recherchés seront disponble dans le repertoire Images")
 
 while True:
     os.chdir(repertoire_parent)
     choix = (input("\n\n\nChoix : "))
-    if choix not in ('0','1','2'):
+    if choix not in ('0','1','2','3'):
         continue
-    if choix == '1' :
+    if choix == '1':
         info_article_CSV() 
     if choix == '2':
         info_categorie_CSV()  
-    if choix == '0' :
+    if choix == '3':
+        info_toutes_catgories_CSV()
+    if choix == '0':
         break 
         
     
