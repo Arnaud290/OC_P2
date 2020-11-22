@@ -23,7 +23,7 @@ def recup_url_article(article_recherche):
     """
     class Th_recup_url(Thread): 
         """
-        Class de recherche d'une adresse URL d'un article par page
+        Classe de recherche d'une adresse URL d'un article par page
         cette classe s'execute en Threading
         """  
         def __init__(self, article_recherche, i):
@@ -35,7 +35,7 @@ def recup_url_article(article_recherche):
             reponse = requests.get(url)                                                                                                                                                             
             if reponse.ok:                                                                                              
                 soup = BeautifulSoup(reponse.text,'lxml')                                                                             
-                articles = soup.findAll("article")                                                                          # récupération des donnees des articles de la page                                                                        
+                articles = soup.findAll("article")                                                                          # récupération des données des articles de la page                                                                        
                 for article in articles:                                                                        
                     a = article.find('a')                                                                                                                                                                
                     link = ('http://books.toscrape.com/catalogue/'+ a['href'])                                                                                     
@@ -51,17 +51,17 @@ def recup_url_article(article_recherche):
     reponse = requests.get(url)                                                                                                                                                                      
     if reponse.ok:                                                                                                 
         soup = BeautifulSoup(reponse.text,'lxml')                                                                   
-        nb_pages = soup.find('li',{'class':'current'}).text.strip()                                                        # récupéraion du nombre de pages à parcourir                                                                                                                                                            
+        nb_pages = soup.find('li',{'class':'current'}).text.strip()                                                         # récupération du nombre de pages à parcourir                                                                                                                                                            
         nb_pages = int(nb_pages[10:])                                                                            
     else:                                                                                                          
         print("Veuillez entrer une adresse valide.")   
     retour_url = []
     t=dict()                                                       
     for i in range(0, nb_pages):
-        t[i] = Th_recup_url(article_recherche, i+1)                                                                         # lancement de la class "Th_recup_url" pour chaques pages en simultanée
+        t[i] = Th_recup_url(article_recherche, i+1)                                                                         # lancement de la classe "Th_recup_url" pour chaque page en simultané
         t[i].start()    
     for i in t:
-        t[i].join()                                                                                                         # fin de tout les lancements de la class "Th_recup_url"
+        t[i].join()                                                                                                         # fin de tous les lancements de la class "Th_recup_url"
     return retour_url[0]                                                                                                    # retour de l'adresse URL de l'article demandé                                                                                                                                                                                                       
                                             
 def valeurs_articles(url_article_recherche):
@@ -91,8 +91,8 @@ def creation_repertoire(repertoire):
     Module permettant de créer et de rentrer dans un repertoire
     """
     if not os.path.exists(repertoire):                                                                                      
-        os.makedirs(repertoire)                                                                                             # création d'un répartoire si il n'existe pas    
-    os.chdir(repertoire)                                                                                                    # accès au repertoire
+        os.makedirs(repertoire)                                                                                             # création d'un répertoire si il n'existe pas    
+    os.chdir(repertoire)                                                                                                    # accès au répertoire
 
 def recup_url_categorie(categorie_recherche):                                                                                               
     """                                             
@@ -154,7 +154,7 @@ def images(nom, lien_image):
     response = requests.get(lien_image)                                                                                     # récupération des données du lien de l'image
     fichier_image = nom + '.jpg'                                                                                            # création du nom du fichier image
     file = open(fichier_image, 'wb')
-    file.write(response.content)                                                                                            # recopie de l'image en local                         
+    file.write(response.content)                                                                                            # copie de l'image en local                         
     file.close()                                                                                                            # fermeture du fichier image
 
 def info_article_CSV():
@@ -179,7 +179,7 @@ def info_categorie_CSV():
     """
     Module de lancement " récupération des informations
     d'une catégorie demandée et inscription des données de
-    chaques articles dans un fichier CSV
+    chaque article dans un fichier CSV
     """
     categorie = input("Veuillez entrer le nom de la catégorie : ")                                                      # demande à l'utilisateur le nom d'une catégorie
     url = recup_url_categorie(categorie)                                                                                # récupération du lien de la catégorie
@@ -187,23 +187,23 @@ def info_categorie_CSV():
     repertoire = 'Catégories'+'/'+ categorie                                        
     creation_repertoire(repertoire)                                                                                     # création d'un répertoire "Catégorie" et d'un sous répertoire avec le nom de la catégorie
     for url in urls :
-        list_valeurs = valeurs_articles(url)                                                                            # récupération des informatiosn de s chaques articles 
+        list_valeurs = valeurs_articles(url)                                                                            # récupération des informations de chaque article 
         file_csv = list_valeurs[2].replace('/','|') + '.csv'
         with open(file_csv,'w',encoding='latin1') as file:                                                              # création d'un fichier CSV par article                                                         
             csvfile = csv.writer(file, delimiter=',')                                                                                                                  
             csvfile.writerow(list_entete)                                                                                
             csvfile.writerow(list_valeurs)
-    creation_repertoire('Images')                                                                                       # création d'un repertoire Image 
+    creation_repertoire('Images')                                                                                       # création d'un repertoire Images 
     for url in urls : 
         list_valeurs = valeurs_articles(url)
-        images(list_valeurs[2].replace('/','|'), list_valeurs[9])                                                       # téléchargement des images de chaques articles
-    print("\n\n\nLes données des articles de la catégorie {} sont dans les fichiers CSV dans le repertoire {}.".format(categorie,repertoire))
+        images(list_valeurs[2].replace('/','|'), list_valeurs[9])                                                       # téléchargement des images de chaque article
+    print("\n\n\nLes données des articles de la catégorie {} sont dans les fichiers CSV dans le répertoire {}.".format(categorie,repertoire))
     
 def info_toutes_catgories_CSV():
     """
     Module de lancement " récupération des informations
     de toutes les catégories du site et inscription des données de
-    chaques articles dans un fichier CSV par catégorie
+    chaque article dans un fichier CSV par catégorie
     """ 
     creation_repertoire('Toutes_Categories')                                                                                # création d'un répertoire "Toutes_catégories"                                    
     listCategory=dict()                                                                                                     # Dictionnaire qui va stocker le nom des catégories et les adresses URLs
@@ -216,13 +216,13 @@ def info_toutes_catgories_CSV():
             categorie = li.text.strip()
             a = li.find('a')                                                                              
             link = 'https://books.toscrape.com/'+a['href']  
-            listCategory[li.text.strip()] = link                                                                            # inscription du (nom = lien) pour chaques catégories 
-    for categorie in listCategory:                                                                                          # création d'un fichiers CVS pour les informations des articles
+            listCategory[li.text.strip()] = link                                                                            # inscription du (nom = lien) pour chaque catégorie
+    for categorie in listCategory:                                                                                          # création d'un fichier CSV pour les informations des articles
         file_csv = categorie + '.csv'
         with open(file_csv,'w',encoding='latin1') as file:                                                                                                                           
             csvfile = csv.writer(file, delimiter=',')                                                                                                                  
             csvfile.writerow(list_entete)
-            listUrl = recup_toutes_urls_articles_categorie(listCategory[categorie])                                         # récupération des liens des articles pour chaques catégories     
+            listUrl = recup_toutes_urls_articles_categorie(listCategory[categorie])                                         # récupération des liens des articles pour chaque catégorie     
             for url in listUrl:
                 list_valeurs = valeurs_articles(url)                                                                        # récupération des informations des articles
                 csvfile.writerow(list_valeurs)                                                                              # inscription des informations dans le fichier CSV
@@ -238,9 +238,9 @@ def info_toutes_catgories_CSV():
 print("Bonjour, bienvenue sur le programme de scraping du site https://books.toscrape.com,\n")
 print("    - Pour une recupération des informations sur un article, faites le 1\n\
     - Pour une recupération des informations sur une catégorie, faites le 2\n\
-    - Pour une recupération des informations sur toutes les catégorie faites le 3\n\
-    - Pour quitter le programme, faites 0\n\n\nPour Chaques choix, les images des articles\
-recherchés seront disponble dans le repertoire Images")
+    - Pour une recupération des informations sur toutes les catégories faites le 3\n\
+    - Pour quitter le programme, faites 0\n\n\nPour Chaque choix, les images des articles\
+recherchés seront disponible dans le répertoire Images")
 
 while True:
     """
@@ -257,4 +257,4 @@ while True:
     if choix == '3':
         info_toutes_catgories_CSV()                                                                                         # module réupération de toutes les catégories
     if choix == '0':
-        break                                                                                                               # arret du programme
+        break                                                                                                               # arrêt du programme
