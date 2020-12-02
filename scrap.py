@@ -36,18 +36,14 @@ class Scrap():
 
     def __init__(self):
         self.list_val_article = []
-        self.article_name = ''
         self.result_url_article = []
 
-    def find_picture(self,list_val_article):
-        if not os.path.exists("Pictures"):                                                                                      
-            os.makedirs("Pictures")                                                                                            
-        os.chdir("Pictures")
-        response = requests.get(list_val_article[9])                                                                                     
-        fichier_image = list_val_article[2] + '.jpg'                                                                                          
-        file = open(fichier_image, 'wb')
-        file.write(response.content)                                                                                                               
-        file.close()                                    
+    def find_picture(self,name, link):
+                response = requests.get(link)                                                                                     
+                picture_file = name + '.jpg'                                                                                          
+                file = open(picture_file, 'wb')
+                file.write(response.content)                                                                                                               
+                file.close()                                    
 
     def find_url_article(self, article_name):
         url = 'https://books.toscrape.com/index.html'                                                                   
@@ -89,3 +85,41 @@ class Scrap():
             product_list[6],
             lien_image]                                      
             return self.list_val_article
+    
+    def find_url_category(self, category_name):
+        reponse = requests.get("https://books.toscrape.com/index.html")                                                         
+        if reponse.ok: 
+            soup = BeautifulSoup(reponse.text,'lxml')
+            lis = soup.find('ul', {'class':'nav nav-list'}).find('li').find('ul').findAll('li')                                
+            for li in lis:
+                if li.text.strip() == category_name:
+                    a = li.find('a')                                                                              
+                    link = 'https://books.toscrape.com/'+a['href']                                                              
+                    return link
+
+    def find_all_urls_articles_category(self, url_category):
+        i = 1
+        links = []   
+        def find_links_articles(url):    
+            reponse = requests.get(url)  
+            soup = BeautifulSoup(reponse.text,'lxml')                                                             
+            articles = soup.findAll("article") 
+            for article in articles:                                                                               
+                a = article.find('a')                                                                              
+                link = a['href']    
+                links.append("https://books.toscrape.com/catalogue/"+ str(link)[9:])     
+        reponse = requests.get(url_category)                                                                         
+        if reponse.ok:                                                                                                  
+            soup = BeautifulSoup(reponse.text,'lxml')   
+            try:
+                nb_pages = soup.find('li',{'class':'current'}).text.strip()                                                     
+            except: 
+                find_links_articles(url_category)
+                return links    
+            else:
+                nb_pages = int(nb_pages[10:])
+                for i in range(1, nb_pages + 1):
+                    url = url_category[:-10] + 'page-' + str(i) + '.html' 
+                    find_links_articles(url)       
+                return links                                                       
+

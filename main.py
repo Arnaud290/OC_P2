@@ -13,7 +13,8 @@ while True:
         cl.lunch_article_CSV_picture()
 
                                                                                                           
-    #if choix == '2':
+    if choix == '2':
+        cl.lunch_category_CSV_picture()
                                                                                                     
     #if choix == '3':
                                                                                                 
