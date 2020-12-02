@@ -12,5 +12,4 @@ class Make_csv:
         with open(file_csv,'w',encoding='latin1') as file:                                                           
             csvfile = csv.writer(file, delimiter=',')                                                                                                                  
             csvfile.writerow(CSV_HEADERS)                                                                                       # inscription de l'entête dans le fichier CSV                                                                             
-            csvfile.writerow(list_val_article)    
-                     
+            csvfile.writerow(list_val_article)

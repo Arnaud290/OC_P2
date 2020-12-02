@@ -3,8 +3,7 @@ from settings import *
 import os
 
 cl = Engine()
-cl.title()
-
+print(TITLE)
 while True:
     os.chdir(parent_directory)
     choix = (input("\n\n\nChoix : "))
