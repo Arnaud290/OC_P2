@@ -32,11 +32,12 @@ class Th_find_url_article(Thread):
         def result(self):
             return self.article_link
 
-class Scrap():
+class Scrap:
 
     def __init__(self):
         self.list_val_article = []
         self.result_url_article = []
+        self.list_url_category  = {}
 
     def find_picture(self,name, link):
                 response = requests.get(link)                                                                                     
@@ -85,20 +86,8 @@ class Scrap():
             product_list[6],
             lien_image]                                      
             return self.list_val_article
-    
-    def find_url_category(self, category_name):
-        reponse = requests.get("https://books.toscrape.com/index.html")                                                         
-        if reponse.ok: 
-            soup = BeautifulSoup(reponse.text,'lxml')
-            lis = soup.find('ul', {'class':'nav nav-list'}).find('li').find('ul').findAll('li')                                
-            for li in lis:
-                if li.text.strip() == category_name:
-                    a = li.find('a')                                                                              
-                    link = 'https://books.toscrape.com/'+a['href']                                                              
-                    return link
 
     def find_all_urls_articles_category(self, url_category):
-        i = 1
         links = []   
         def find_links_articles(url):    
             reponse = requests.get(url)  
@@ -122,4 +111,17 @@ class Scrap():
                     url = url_category[:-10] + 'page-' + str(i) + '.html' 
                     find_links_articles(url)       
                 return links                                                       
+
+    def find_all_category(self):     
+        url = 'https://books.toscrape.com/'
+        reponse = requests.get(url)
+        if reponse.ok:
+            soup = BeautifulSoup(reponse.text,'lxml')
+            lis = soup.find('ul', {'class':'nav nav-list'}).find('li').find('ul').findAll('li')                                 # récupération des informations des catégories
+        for li in lis:
+            categorie = li.text.strip()
+            a = li.find('a')                                                                              
+            link = 'https://books.toscrape.com/'+a['href']  
+            self.list_url_category[li.text.strip()] = link                     
+        return self.list_url_category       
 

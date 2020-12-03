@@ -18,4 +18,4 @@ TITLE = "\n\n\nBonjour, bienvenue sur le programme de scraping du site https://b
 - Pour une recupération des informations sur une catégorie, faites le 2\n\
 - Pour une recupération des informations sur toutes les catégories faites le 3\n\
 - Pour quitter le programme, faites 0\n\n\nPour Chaque choix, les images des articles \
-recherchés seront disponible dans le répertoire Images)"
+recherchés seront disponible dans le répertoire Images"
