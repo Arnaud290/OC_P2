@@ -2,6 +2,8 @@ import os
 
 parent_directory = os.getcwd()  
 
+url = 'http://books.toscrape.com/'
+
 CSV_HEADERS = ['product_page_url',
                 'universal_ product_code (upc)',
                 'title',
@@ -13,9 +15,9 @@ CSV_HEADERS = ['product_page_url',
                 'review_rating',
                 'image_url'] 
 
-TITLE = "\n\n\nBonjour, bienvenue sur le programme de scraping du site https://books.toscrape.com,\n\n\n\
-- Pour une recupération des informations sur un article, faites le 1\n\
-- Pour une recupération des informations sur une catégorie, faites le 2\n\
-- Pour une recupération des informations sur toutes les catégories faites le 3\n\
-- Pour quitter le programme, faites 0\n\n\nPour Chaque choix, les images des articles \
-recherchés seront disponible dans le répertoire Images"
+TITLE = "\n\n\nHello, welcome to the site's scraping program https://books.toscrape.com,\n\n\n\
+- To retrieve information on an article, press 1\n\
+- To retrieve information on a category, press 2\n\
+- To retrieve information on all categories, press 3\n\
+- To exit the program, press 0\n\n\nFor Each choice, the item pictures \
+searched will be available in the Images directory"
