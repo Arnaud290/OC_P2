@@ -39,18 +39,18 @@
 
 ### 1 - Lancement
 
-        $ python3 engine.py
+        $ python3 main.py
 
 ### 2 - Choix
 
-        Choisir 1 pour récuperer les informations et image d'un article dans le repertoire ../Articles et ../Articles/Images 
+        Choisir 1 pour récuperer les informations et image d'un article dans le repertoire ../Articles et ../Articles/Pictures
             
             Veillez à bien copier le nom de l'article exact sur le site
 
-        Choisir 2 pour récupérer les informations d'une catégorie et les images des articles de la catégorie dans le répertoire ../Catégories et ../Catégorie/Images 
+        Choisir 2 pour récupérer les informations d'une catégorie et les images des articles de la catégorie dans le répertoire ../Catégories et ../Catégories/Pictures
 
             Veillez à bien copier le nom de la catégorie exacte sur le site
     
-        Choisir 3 pour récupérer l'ensemble des catégories et images du site dans le répertoire ../Toutes_Categories et ../Toutes_Categories/Images 
+        Choisir 3 pour récupérer l'ensemble des catégories et images du site dans le répertoire ../Catégories et ../Catégories/Pictures
 
 

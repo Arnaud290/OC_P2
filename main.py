@@ -1,4 +1,4 @@
+"""Program launch module"""
 from menu import Menu
-
-cl = Menu()
-cl.lunch_menu()
+menu = Menu()
+menu.lunch_menu()
