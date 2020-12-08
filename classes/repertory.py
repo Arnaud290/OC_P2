@@ -1,6 +1,5 @@
 """Module for the creation of directories"""
 import os
-from settings import parent_directory
 
 
 class Repertory:
@@ -12,7 +11,6 @@ class Repertory:
     def repertory(self):
         """Attribute for the creation of a
         directory according to the name"""
-        os.chdir(parent_directory)
         if not os.path.exists(self.repertory_name):
             os.makedirs(self.repertory_name)
         os.chdir(self.repertory_name)

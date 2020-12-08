@@ -1,6 +1,6 @@
 """Module for creating csv files"""
 import csv
-from settings import CSV_HEADERS
+from classes.settings import CSV_HEADERS
 
 
 class MakeCsv:
@@ -12,14 +12,16 @@ class MakeCsv:
     def csv(self):
         """Attribute for creating a csv file for an article or  an category """
         if isinstance(self.list_val, list):
-            file_csv = self.list_val[2].replace('/', '|') + '.csv'
+            title = self.list_val[2].replace('/', '_')
+            title = title.replace(':', '_').replace(".", '_')
+            file_csv = title + '.csv'
             with open(file_csv, 'w', encoding='latin1') as file:
                 csvfile = csv.writer(file, delimiter=',')
                 csvfile.writerow(CSV_HEADERS)
                 csvfile.writerow(self.list_val)
         else:
             for key in self.list_val:
-                file_csv = key.replace('/', '|') + '.csv'
+                file_csv = key + '.csv'
                 with open(file_csv, 'w', encoding='latin1') as file:
                     csvfile = csv.writer(file, delimiter=',')
                     csvfile.writerow(CSV_HEADERS)

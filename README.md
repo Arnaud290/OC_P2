@@ -6,10 +6,10 @@
 
 ## Contexte
 
-### Création d'un outil en language Python perméttant de récupérer des informations sur des articles
-### comme le prix, le nombres d'exemplaires disponibles ect. sur les livres du site http://books.toscrape.com/.
-### Cet outil permet également de récupérer les informations de toute une catégorie voir de toutes les catégories 
-### disponibles. Les images des articles consultés sont égalements téléchargées automatiquement.
+Création d'un outil en language Python perméttant de récupérer des informations sur des articles
+comme le prix, le nombres d'exemplaires disponibles ect. sur les livres du site http://books.toscrape.com/.
+Cet outil permet également de récupérer les informations de toute une catégorie voir de toutes les catégories 
+disponibles. Les images des articles consultés sont égalements téléchargées automatiquement.
 
 ## Installation
 

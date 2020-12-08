@@ -1,35 +1,7 @@
 """Element search module"""
-from threading import Thread
-from settings import URL
-from scrap import Scrap
-
-
-class ThFindUrlArticle(Thread):
-    """Class in threading allowing the search
-    for an article on several pages simultaneously"""
-    def __init__(self, article_name, i):
-        Thread.__init__(self)
-        self.article_name = article_name
-        self.i = i
-        self.article_link = False
-        self.scrap = Scrap()
-
-    def run(self):
-        url = URL + 'catalogue/page-' + str(self.i) + '.html'
-        soup = self.scrap.scrap(url)
-        articles = soup.findAll("article")
-        for article in articles:
-            url_article = article.find('a')
-            url_article = (URL + 'catalogue/' + url_article['href'])
-            soup = self.scrap.scrap(url_article)
-            title = soup.find('div', {'class': 'col-sm-6 product_main'})
-            title = title.find('h1').text
-            if title == self.article_name:
-                self.article_link = url_article
-
-    def result(self):
-        """Attribute for article link return"""
-        return self.article_link
+from classes.thread_find_url_article import ThreadFindUrlArticle
+from classes.settings import URL
+from classes.scrap import Scrap
 
 
 class Find:
@@ -47,7 +19,7 @@ class Find:
         nb_pages = int(nb_pages[10:])
         return_th = dict()
         for i in range(nb_pages):
-            return_th[i] = ThFindUrlArticle(article_name, i + 1)
+            return_th[i] = ThreadFindUrlArticle(article_name, i + 1)
             return_th[i].start()
         for i in return_th:
             return_th[i].join()
@@ -60,15 +32,14 @@ class Find:
         soup = self.scrap.scrap(article_url)
         title = soup.find('div', {'class': 'col-sm-6 product_main'})
         title = title.find('h1').text
-        product_description = soup.find('article')
-        product_description = product_description.find('p')
-        product_description = product_description.find_next('p')
-        product_description = product_description.find_next('p')
-        product_description = product_description.find_next('p').text
+        description = soup.find('article', {'class': 'product_page'})
+        description = description.findChildren('p', recursive=False)
+        try:
+            description = description[0].text
+        except IndexError:
+            description = ''
         categorie = soup.find('ul', {'class': 'breadcrumb'})
-        categorie = categorie.find('a')
-        categorie = categorie.find_next('a')
-        categorie = categorie.find_next('a').text
+        categorie = categorie.findChildren('a')[2].text
         table = soup.findAll('td')
         product_list = []
         for cell in table:
@@ -78,11 +49,11 @@ class Find:
         self.list_val_article = [
                                 article_url,
                                 product_list[0],
-                                title.replace('/', '|'),
+                                title,
                                 product_list[3].strip('Â'),
                                 product_list[2].strip('Â'),
                                 product_list[5],
-                                product_description,
+                                description,
                                 categorie,
                                 product_list[6],
                                 lien_image

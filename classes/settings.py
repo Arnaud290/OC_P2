@@ -1,7 +1,6 @@
 """Module containing the initial variables"""
-import os
 
-parent_directory = os.getcwd()
+# URL link of the initial site
 URL = 'http://books.toscrape.com/'
 CSV_HEADERS = [
                 'product_page_url',
@@ -15,6 +14,7 @@ CSV_HEADERS = [
                 'review_rating',
                 'image_url'
                 ]
+# Program launch title
 TITLE = "\n\n\nHello, welcome to the site's\
 scraping program https://books.toscrape.com,\n\n\n\
 - To retrieve information on an article, press 1\n\
