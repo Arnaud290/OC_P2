@@ -1,5 +1,6 @@
 """Article url search class module"""
 
+import re
 from threading import Thread
 from classes.scrap import Scrap
 from classes.settings import URL
@@ -12,8 +13,9 @@ class ThreadFindUrlArticle(Thread):
         Thread.__init__(self)
         self.article_name = article_name
         self.i = i
-        self.article_link = False
+        self.article_link = []
         self.scrap = Scrap()
+        self.pattern = re.compile('[^A-Za-z0-9]')
 
     def run(self):
         url = URL + 'catalogue/page-' + str(self.i) + '.html'
@@ -25,8 +27,9 @@ class ThreadFindUrlArticle(Thread):
             soup = self.scrap.scrap(url_article)
             title = soup.find('div', {'class': 'col-sm-6 product_main'})
             title = title.find('h1').text
+            title = self.pattern.sub('', title).lower()
             if title == self.article_name:
-                self.article_link = url_article
+                self.article_link.append(url_article)
 
     def result(self):
         """Attribute for article link return"""

@@ -14,6 +14,7 @@ class Find:
 
     def find_url_article(self, article_name):
         """Attribute to find a url of an article"""
+        url_article = []
         soup = self.scrap.scrap(URL)
         nb_pages = soup.find('li', {'class': 'current'}).text.strip()
         nb_pages = int(nb_pages[10:])
@@ -24,7 +25,8 @@ class Find:
         for i in return_th:
             return_th[i].join()
             if return_th[i].result():
-                url_article = return_th[i].result()
+                for url in return_th[i].result():
+                    url_article.append(url)
         return url_article
 
     def find_val_article(self, article_url):

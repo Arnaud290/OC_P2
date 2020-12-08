@@ -15,7 +15,7 @@ CSV_HEADERS = [
                 'image_url'
                 ]
 # Program launch title
-TITLE = "\n\n\nHello, welcome to the site's\
+TITLE = "\n\n\nHello, welcome to the site's \
 scraping program https://books.toscrape.com,\n\n\n\
 - To retrieve information on an article, press 1\n\
 - To retrieve information on a category, press 2\n\
