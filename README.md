@@ -6,10 +6,10 @@
 
 ## Contexte
 
-Création d'un outil en language Python perméttant de récupérer des informations sur des articles
-comme le prix, le nombres d'exemplaires disponibles ect. sur les livres du site http://books.toscrape.com/.
-Cet outil permet également de récupérer les informations de toute une catégorie voir de toutes les catégories 
-disponibles. Les images des articles consultés sont égalements téléchargées automatiquement.
+Création d'un outil en langage Python permettant de récupérer des informations sur des articles
+comme le prix, le nombre d'exemplaires disponibles etc. sur les livres du site http://books.toscrape.com/.
+Cet outil permet également de récupérer les informations de toute une catégorie voir de toutes les catégories
+disponibles. Les images des articles consultés sont également téléchargées automatiquement.
 
 ## Installation
 
@@ -43,7 +43,7 @@ disponibles. Les images des articles consultés sont égalements téléchargées
 
 ### 2 - Choix
 
-        Choisir 1 pour récuperer les informations et image d'un article dans le repertoire ../Articles et ../Articles/Pictures
+        Choisir 1 pour récupérer les informations et images d'un article dans le répertoire ../Articles et ../Articles/Pictures
             
             Veillez à bien copier le nom de l'article exact sur le site
 
