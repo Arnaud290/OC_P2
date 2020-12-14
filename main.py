@@ -2,4 +2,5 @@
 from classes.engine import Engine
 
 
-Engine()
+if __name__ == "__main__":
+    Engine()
